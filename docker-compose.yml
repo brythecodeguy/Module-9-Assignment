@@ -21,7 +21,7 @@ services:
 
   # Service: db (PostgreSQL)
   db:
-    image: postgres
+    image: postgres:16  # Updated to a newer version
     container_name: postgres_db
     environment:
       POSTGRES_USER: postgres
