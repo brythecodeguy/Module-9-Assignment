@@ -47,6 +47,7 @@ Connect to PostgreSQL using:
 
 ### 1️: Create Tables
 
+```sql
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -64,11 +65,13 @@ CREATE TABLE calculations (
     user_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+```
 
 ---
 
 ### 2️: Insert Data
 
+```sql
 INSERT INTO users (username, email)
 VALUES
 ('alice', '<alice@example.com>'),
@@ -79,11 +82,13 @@ VALUES
 ('add', 2, 3, 5, 1),
 ('subtract', 10, 4, 6, 1),
 ('multiply', 4, 5, 20, 2);
+```
 
 ---
 
 ### 3️: Query Data
 
+```sql
 SELECT * FROM users;
 
 SELECT * FROM calculations;
@@ -91,21 +96,26 @@ SELECT * FROM calculations;
 SELECT u.username, c.operation, c.result
 FROM calculations c
 JOIN users u ON c.user_id = u.id;
+```
 
 ---
 
 ### 4️: Update Data
 
+```sql
 UPDATE calculations
 SET result = 7
 WHERE id = 2;
+```
 
 ---
 
 ### 5: Delete Data
 
+```sql
 DELETE FROM calculations
 WHERE id = 3;
+```
 
 ---
 
