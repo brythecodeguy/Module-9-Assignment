@@ -111,9 +111,7 @@ WHERE id = 3;
 
 ## Documentation
 
-This project includes:
-
-- Module9_SQL_Screenshots.pdf → SQL execution screenshots  
-- Module9_Reflection.pdf → Reflection on the assignment  
+- [Module9_SQL_Screenshots.pdf](./Module9_Screenshots.pdf) – SQL execution screenshots and Docker setup  
+- [Module9_Reflection.pdf](./Module9_Reflection.pdf) – Reflection on the assignment  
 
 ---
