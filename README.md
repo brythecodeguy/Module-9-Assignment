@@ -1,264 +1,119 @@
-# 📦 Project Setup
+# Module 9
+
+## Module Overview
+
+This module works with PostgreSQL in a Dockerized environment and execute raw SQL commands using pgAdmin. The goal was to understand how relational databases function by performing core SQL operations.
 
 ---
 
-# 🧩 1. Install Homebrew (Mac Only)
+## Docker Setup
 
-> Skip this step if you're on Windows.
+I started the application using:
 
-Homebrew is a package manager for macOS.  
-You’ll use it to easily install Git, Python, Docker, etc.
+docker-compose up --build
 
-**Install Homebrew:**
+This will start:
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-**Verify Homebrew:**
-
-```bash
-brew --version
-```
-
-If you see a version number, you're good to go.
+- FastAPI application
+- PostgreSQL database
+- pgAdmin interface
 
 ---
 
-# 🧩 2. Install and Configure Git
+## Access pgAdmin
 
-## Install Git
+Go to:
+<http://localhost:5050>
 
-- **MacOS (using Homebrew)**
+Login (based on docker-compose):
 
-```bash
-brew install git
-```
-
-- **Windows**
-
-Download and install [Git for Windows](https://git-scm.com/download/win).  
-Accept the default options during installation.
-
-**Verify Git:**
-
-```bash
-git --version
-```
+- Email: <admin@example.com>  
+- Password: admin  
 
 ---
 
-## Configure Git Globals
+## Database Connection
 
-Set your name and email so Git tracks your commits properly:
+Connect to PostgreSQL using:
 
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your_email@example.com"
-```
-
-Confirm the settings:
-
-```bash
-git config --list
-```
+- Host: db  
+- Username: postgres  
+- Password: postgres  
+- Database: fastapi_db  
 
 ---
 
-## Generate SSH Keys and Connect to GitHub
+## Example SQL Operations
 
-> Only do this once per machine.
+### 1️: Create Tables
 
-1. Generate a new SSH key:
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
-
-(Press Enter at all prompts.)
-
-2. Start the SSH agent:
-
-```bash
-eval "$(ssh-agent -s)"
-```
-
-3. Add the SSH private key to the agent:
-
-```bash
-ssh-add ~/.ssh/id_ed25519
-```
-
-4. Copy your SSH public key:
-
-- **Mac/Linux:**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | pbcopy
-```
-
-- **Windows (Git Bash):**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
-
-5. Add the key to your GitHub account:
-   - Go to [GitHub SSH Settings](https://github.com/settings/keys)
-   - Click **New SSH Key**, paste the key, save.
-
-6. Test the connection:
-
-```bash
-ssh -T git@github.com
-```
-
-You should see a success message.
+CREATE TABLE calculations (
+    id SERIAL PRIMARY KEY,
+    operation VARCHAR(20) NOT NULL,
+    operand_a FLOAT NOT NULL,
+    operand_b FLOAT NOT NULL,
+    result FLOAT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 ---
 
-# 🧩 3. Clone the Repository
+### 2️: Insert Data
 
-Now you can safely clone the course project:
+INSERT INTO users (username, email)
+VALUES
+('alice', '<alice@example.com>'),
+('bob', '<bob@example.com>');
 
-```bash
-git clone <repository-url>
-cd <repository-directory>
-```
-
----
-
-# 🛠️ 4. Install Python 3.10+
-
-## Install Python
-
-- **MacOS (Homebrew)**
-
-```bash
-brew install python
-```
-
-- **Windows**
-
-Download and install [Python for Windows](https://www.python.org/downloads/).  
-✅ Make sure you **check the box** `Add Python to PATH` during setup.
-
-**Verify Python:**
-
-```bash
-python3 --version
-```
-or
-```bash
-python --version
-```
+INSERT INTO calculations (operation, operand_a, operand_b, result, user_id)
+VALUES
+('add', 2, 3, 5, 1),
+('subtract', 10, 4, 6, 1),
+('multiply', 4, 5, 20, 2);
 
 ---
 
-## Create and Activate a Virtual Environment
+### 3️: Query Data
 
-(Optional but recommended)
+SELECT * FROM users;
 
-```bash
-python3 -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate.bat  # Windows
-```
+SELECT * FROM calculations;
 
-### Install Required Packages
-
-```bash
-pip install -r requirements.txt
-```
+SELECT u.username, c.operation, c.result
+FROM calculations c
+JOIN users u ON c.user_id = u.id;
 
 ---
 
-# 🐳 5. (Optional) Docker Setup
+### 4️: Update Data
 
-> Skip if Docker isn't used in this module.
-
-## Install Docker
-
-- [Install Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)
-- [Install Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
-
-## Build Docker Image
-
-```bash
-docker build -t <image-name> .
-```
-
-## Run Docker Container
-
-```bash
-docker run -it --rm <image-name>
-```
+UPDATE calculations
+SET result = 7
+WHERE id = 2;
 
 ---
 
-# 🚀 6. Running the Project
+### 5: Delete Data
 
-- **Without Docker**:
-
-```bash
-python main.py
-```
-
-(or update this if the main script is different.)
-
-- **With Docker**:
-
-```bash
-docker run -it --rm <image-name>
-```
+DELETE FROM calculations
+WHERE id = 3;
 
 ---
 
-# 📝 7. Submission Instructions
+## Documentation
 
-After finishing your work:
+This project includes:
 
-```bash
-git add .
-git commit -m "Complete Module X"
-git push origin main
-```
-
-Then submit the GitHub repository link as instructed.
+- Module9_SQL_Screenshots.pdf → SQL execution screenshots  
+- Module9_Reflection.pdf → Reflection on the assignment  
 
 ---
-
-# 🔥 Useful Commands Cheat Sheet
-
-| Action                         | Command                                          |
-| ------------------------------- | ------------------------------------------------ |
-| Install Homebrew (Mac)          | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` |
-| Install Git                     | `brew install git` or Git for Windows installer |
-| Configure Git Global Username  | `git config --global user.name "Your Name"`      |
-| Configure Git Global Email     | `git config --global user.email "you@example.com"` |
-| Clone Repository                | `git clone <repo-url>`                          |
-| Create Virtual Environment     | `python3 -m venv venv`                           |
-| Activate Virtual Environment   | `source venv/bin/activate` / `venv\Scripts\activate.bat` |
-| Install Python Packages        | `pip install -r requirements.txt`               |
-| Build Docker Image              | `docker build -t <image-name> .`                |
-| Run Docker Container            | `docker run -it --rm <image-name>`               |
-| Push Code to GitHub             | `git add . && git commit -m "message" && git push` |
-
----
-
-# 📋 Notes
-
-- Install **Homebrew** first on Mac.
-- Install and configure **Git** and **SSH** before cloning.
-- Use **Python 3.10+** and **virtual environments** for Python projects.
-- **Docker** is optional depending on the project.
-
----
-
-# 📎 Quick Links
-
-- [Homebrew](https://brew.sh/)
-- [Git Downloads](https://git-scm.com/downloads)
-- [Python Downloads](https://www.python.org/downloads/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [GitHub SSH Setup Guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
